@@ -9,7 +9,6 @@ import org.example.model.Account;
 import org.example.model.User;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,14 +48,14 @@ public class AccountService {
         System.out.println("Создан новый счет: " + newAccount);
     }
 
-    public void deposit(int accountId, BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+    public void deposit(int accountId, double amount) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Сумма пополнения должна быть положительной.");
         }
 
         for (Account account : accounts.values()) {
             if (account.getId() == accountId) {
-                account.setMoneyAmount(account.getMoneyAmount());
+                account.setMoneyAmount(account.getMoneyAmount() + amount);
                 System.out.println("Счет с id " + accountId + " пополнен на сумму " + amount);
                 return;
 
@@ -164,10 +163,9 @@ public class AccountService {
             if (firstAccount.isPresent()) {
                 Account firstAcc = firstAccount.get();
 
-                firstAcc.setMoneyAmount(firstAcc.getMoneyAmount());
+                firstAcc.setMoneyAmount(firstAcc.getMoneyAmount() + accountClose.getMoneyAmount());
             }
         }
-
         accounts.remove(accountId);
         accountList.remove(accountClose);
         System.out.println("Счет с id: " + accountId + " успешно закрыт");
